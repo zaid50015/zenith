@@ -1,0 +1,8 @@
+{"name"  : "kailash" , 
+ "dept" : "computer",
+ "Tax" : {
+           "TA":"10%",
+           "DA":"155",
+           "HRA":"12%"
+           } 
+ }
