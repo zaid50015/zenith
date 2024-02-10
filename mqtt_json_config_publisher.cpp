@@ -23,6 +23,24 @@ int main() {
     int rc;
 
     mosquitto_lib_init();
+    Config cfg;
+
+    try {
+
+        cfg.readFile("./config/configfile.cfg");
+
+        const Setting& root = cfg.getRoot();
+
+        std::string host;
+        int port;
+        std::string topic;
+        std::string jsonfile;
+
+        root.lookupValue("host", host);
+        root.lookupValue("port", port);
+        root.lookupValue("topic", topic);
+        root.lookupValue("jsonfile", jsonfile);
+ 
 
     // Create a new mosquitto client instance
     mosq = mosquitto_new(NULL, true, NULL);
@@ -32,7 +50,9 @@ int main() {
     }
 
     // Connect to MQTT broker
-    rc = mosquitto_connect(mosq, MQTT_HOST, MQTT_PORT, 60);
+    //rc = mosquitto_connect(mosq, MQTT_HOST, MQTT_PORT, 60);
+    rc = mosquitto_connect(mosq, host.c_str(), port, 60);
+
     if (rc) {
         std::cerr << "Error: Could not connect to MQTT broker." << std::endl;
         return rc;
@@ -41,7 +61,8 @@ int main() {
     // Loop to publish messages
     while (true) {
         // Read JSON object from file
-        std::ifstream ifs("data.json");
+        //std::ifstream ifs("data.json");
+        std::ifstream ifs(jsonfile);
         if (!ifs.is_open()) {
             std::cerr << "Error: Failed to open data.json" << std::endl;
             return 1;
@@ -74,6 +95,18 @@ int main() {
 
         // Sleep for a while before publishing the next message
         std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+    } catch (const FileIOException &fioex) {
+        std::cerr << "Error reading config file: " << fioex.what() << "Filename :"<<std::endl;
+        return 1;
+    }
+    catch (const ParseException &pex) {
+        std::cerr << "Error parsing config file at line " << pex.getLine() << ": " << pex.getError() << std::endl;
+        return 1;
+    }
+    catch (const SettingNotFoundException &nfex) {
+        std::cerr << "Error setting not found in config file: " << nfex.getPath() << std::endl;
+        return 1;
     }
 
     // Clean up
