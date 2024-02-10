@@ -1,8 +1,19 @@
-{"name"  : "kailash" , 
- "dept" : "computer",
- "Tax" : {
-           "TA":"10%",
-           "DA":"155",
-           "HRA":"12%"
-           } 
- }
+{
+	"address_detail_city" : "Lisbon",
+	"address_detail_country" : "Portugal",
+	"address_detail_county" : "Lisbon",
+	"address_detail_state" : "UNKNOWN",
+	"Score" : 2.3,
+	"ScoreCategory" : "Poor",
+	"ScoreNo" : 16,
+	"buId" : "8EA10CC0-C763-46D4-ACE6-80AE68A4BB7C",
+	"buName" : "Sample KPI",
+	"latitude" : 52.194,
+	"longitude" : -1.4851,
+	"Measurements" : 0,
+	"createTime" : "2024-02-02T10:10:29.387Z",
+	"custName" : "Independent Test REQ.",
+	"custSecsId" : "SECS_36543_00041",
+	"cId" : null,
+	"rabs" : -91
+}
