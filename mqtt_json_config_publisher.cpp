@@ -10,6 +10,7 @@
 
 #include <libconfig.h++>
 
+using namespace std;
 using namespace rapidjson;
 using namespace libconfig;
 
@@ -31,10 +32,10 @@ int main() {
 
         const Setting& root = cfg.getRoot();
 
-        std::string host;
+        string host;
         int port;
-        std::string topic;
-        std::string jsonfile;
+        string topic;
+        string jsonfile;
 
         root.lookupValue("host", host);
         root.lookupValue("port", port);
@@ -45,7 +46,7 @@ int main() {
     // Create a new mosquitto client instance
     mosq = mosquitto_new(NULL, true, NULL);
     if (!mosq) {
-        std::cerr << "Error: Out of memory when creating client." << std::endl;
+        cerr << "Error: Out of memory when creating client." << endl;
         return 1;
     }
 
@@ -54,58 +55,58 @@ int main() {
     rc = mosquitto_connect(mosq, host.c_str(), port, 60);
 
     if (rc) {
-        std::cerr << "Error: Could not connect to MQTT broker." << std::endl;
+        cerr << "Error: Could not connect to MQTT broker." << endl;
         return rc;
     }
 
     // Loop to publish messages
     while (true) {
         // Read JSON object from file
-        //std::ifstream ifs("data.json");
-        std::ifstream ifs(jsonfile);
+        //ifstream ifs("data.json");
+        ifstream ifs(jsonfile);
         if (!ifs.is_open()) {
-            std::cerr << "Error: Failed to open data.json" << std::endl;
+            cerr << "Error: Failed to open data.json" << endl;
             return 1;
         }
 
-        std::string content((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
+        string content((istreambuf_iterator<char>(ifs)), (istreambuf_iterator<char>()));
         ifs.close();
 
         Document document;
         document.Parse(content.c_str());
 
         if (document.HasParseError()) {
-            std::cerr << "Error: Failed to parse JSON." << std::endl;
+            cerr << "Error: Failed to parse JSON." << endl;
             return 1;
         }
 
         StringBuffer buffer;
         Writer<StringBuffer> writer(buffer);
         document.Accept(writer);
-        std::string payload = buffer.GetString();
+        string payload = buffer.GetString();
 
         // Publish the JSON object as a message
         rc = mosquitto_publish(mosq, NULL, MQTT_TOPIC, payload.length(), payload.c_str(), 0, false);
         if (rc) {
-            std::cerr << "Error: Could not publish message." << std::endl;
+            cerr << "Error: Could not publish message." << endl;
             return rc;
         }
 
-        std::cout << "Message published: " << payload << std::endl;
+        cout << "Message published: " << payload << endl;
 
         // Sleep for a while before publishing the next message
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        this_thread::sleep_for(chrono::seconds(1));
       }
     } catch (const FileIOException &fioex) {
-        std::cerr << "Error reading config file: " << fioex.what() << "Filename :"<<std::endl;
+        cerr << "Error reading config file: " << fioex.what() << "Filename :" << endl;
         return 1;
     }
     catch (const ParseException &pex) {
-        std::cerr << "Error parsing config file at line " << pex.getLine() << ": " << pex.getError() << std::endl;
+        cerr << "Error parsing config file at line " << pex.getLine() << ": " << pex.getError() << endl;
         return 1;
     }
     catch (const SettingNotFoundException &nfex) {
-        std::cerr << "Error setting not found in config file: " << nfex.getPath() << std::endl;
+        cerr << "Error setting not found in config file: " << nfex.getPath() << endl;
         return 1;
     }
 
