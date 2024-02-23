@@ -1,9 +1,9 @@
 
 # How to run the code
-1.Firstly run the mosquitto server on your machine if it is not already running
-2.First compile the code using the terminal by following the steps below
-3.The execute the code
-#Compiling the code
+1. Firstly run the mosquitto server on your machine if it is not already running
+2. First compile the code using the terminal by following the steps below
+3. The execute the code
+# Compiling the code
  
 ## Compiling the publisher
 g++ -o mqtt_json_config_publisher mqtt_json_config_publisher.cpp -lmosquitto -I./rapidjson -lconfig++
@@ -12,7 +12,7 @@ g++ -o mqtt_json_config_publisher mqtt_json_config_publisher.cpp -lmosquitto -I.
 g++ -o mqtt_subscriber mqtt_subscriber.cpp -lmosquitto -I./rapidjson
 
 # Executing the code
-** Execute the subscriber and publisher in seperate terminal.**
+**Execute the subscriber and publisher in seperate terminal.**
 
 ## 1.Executing the subscriber
 ./mqtt_subscriber
