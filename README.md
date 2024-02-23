@@ -22,4 +22,3 @@ g++ -o mqtt_subscriber mqtt_subscriber.cpp -lmosquitto -I./rapidjson
 
 
  publisher read the data.json file and push the data on the topic ( test ) on mosquito server.
-./mqtt_json_config_publisher
